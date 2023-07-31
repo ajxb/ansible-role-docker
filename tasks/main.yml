@@ -1,0 +1,20 @@
+---
+- name: Import assert.yml
+  ansible.builtin.import_tasks: assert.yml
+  run_once: true
+  delegate_to: localhost
+
+- name: Install docker
+  ansible.builtin.include_tasks: install_docker.yml
+
+- name: Configure docker
+  ansible.builtin.include_tasks: configure_docker.yml
+
+- name: Install plugins
+  ansible.builtin.include_tasks: install_plugins.yml
+
+- name: Configure users
+  ansible.builtin.include_tasks: configure_users.yml
+  when:
+    - docker_users is defined
+    - docker_users | length > 0

@@ -1,0 +1,68 @@
+---
+- name: Install prerequisite packages
+  become: true
+  ansible.builtin.yum:
+    name:
+      - yum-utils
+      - yum-plugin-versionlock
+
+- name: Ensure old versions of docker are not installed
+  become: true
+  ansible.builtin.yum:
+    name:
+      - docker
+      - docker-client
+      - docker-client-latest
+      - docker-common
+      - docker-latest
+      - docker-latest-logrotate
+      - docker-logrotate
+      - docker-engine
+    state: absent
+
+- name: Configure repository
+  become: true
+  ansible.builtin.yum_repository:
+    name: docker-ce
+    description: Docker CE Stable
+    baseurl: "{{ docker_repo_url }}/$releasever/$basearch/stable"
+    enabled: true
+    gpgcheck: true
+    gpgkey: "{{ docker_repo_url }}/gpg"
+
+- name: Unlock docker package versions
+  become: true
+  community.general.yum_versionlock:
+    state: absent
+    name: "{{ docker_packages }}"
+
+- name: Install docker - latest version
+  become: true
+  ansible.builtin.yum:
+    name: "{{ docker_packages }}"
+    state: latest # noqa: package-latest
+    update_cache: true
+  notify: Restart docker
+  when: docker_version == "latest"
+
+- name: Install docker - specific version
+  become: true
+  ansible.builtin.yum:
+    name: "{{ docker_packages_versioned }}"
+    state: present
+    update_cache: true
+  notify: Restart docker
+  when: docker_version != "latest"
+
+- name: Lock docker package versions
+  become: true
+  community.general.yum_versionlock:
+    state: present
+    name: "{{ docker_packages }}"
+
+- name: Start and enable docker
+  become: true
+  ansible.builtin.service:
+    name: docker
+    enabled: true
+    state: started

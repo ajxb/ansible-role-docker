@@ -1,0 +1,24 @@
+---
+# packages to install prior to installing docker
+docker_prerequisite_packages:
+  - yum-utils
+  - yum-plugin-versionlock
+
+# docker packages to install
+docker_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+
+docker_packages_versioned:
+  - "{{ 'docker-ce-' ~ docker_version }}"
+  - "{{ 'docker-ce-cli-' ~ docker_version }}"
+  - containerd.io
+
+# docker plugins to install
+docker_plugins:
+  - docker-buildx-plugin
+  - docker-compose-plugin
+
+# Docker repo URL
+docker_repo_url: https://download.docker.com/linux/centos

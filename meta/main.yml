@@ -1,0 +1,20 @@
+---
+galaxy_info:
+  author: ajxb
+  role_name: docker
+  description: Install and configure docker on your system
+  company: N/A  
+  license: Apache-2.0
+  min_ansible_version: "2.12"
+
+  platforms:
+  - name: EL
+    versions:
+      - '8'
+  
+  galaxy_tags:
+    - docker
+    - alternatives
+    - system
+
+dependencies: []

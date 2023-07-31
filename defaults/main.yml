@@ -1,0 +1,9 @@
+---
+# The version of docker to install
+docker_version: latest
+
+# A list of users who will be added to the docker group.
+docker_users: []
+
+# Docker daemon options as a dictionary
+docker_daemon_options: {}

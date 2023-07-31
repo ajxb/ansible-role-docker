@@ -1,0 +1,25 @@
+---
+- name: assert | Test if supported Linux version
+  ansible.builtin.assert:
+    that:
+      - ansible_distribution in [ 'OracleLinux' ]
+      - ansible_distribution_major_version is version(8, '==')
+    quiet: true
+
+- name: assert | Test if docker_daemon_options is set correctly
+  ansible.builtin.assert:
+    that:
+      - docker_daemon_options is mapping
+      - docker_daemon_options is iterable
+    quiet: yes
+  when:
+    - docker_daemon_options is defined
+
+- name: assert | Test if docker_users is set correctly
+  ansible.builtin.assert:
+    that:
+      - docker_users is not mapping
+      - docker_users is iterable
+    quiet: yes
+  when:
+    - docker_users is defined
